@@ -15,10 +15,11 @@ const flappyBird = {
     x:10,
     y:50,
     speed: 0,
-    gravity:0.0025,
+    gravity:0.014,
     update(){
         this.speed += this.gravity;
         flappyBird.y += this.speed;
+        console.log(y);
     },
     draw(){
         context.drawImage(
@@ -86,17 +87,67 @@ const background = {
     }
 }
 
+const messageGetReady = {
+    sX:134,
+    sY:0,
+    w:174,
+    h:152,
+    x: (canvas.width / 2) - 174 / 2,
+    y: 50,
+    draw(){
+        context.drawImage(
+            sprite,
+            messageGetReady.sX, messageGetReady.sY,
+            messageGetReady.w, messageGetReady.h,
+            messageGetReady.x, messageGetReady.y,
+            messageGetReady.w, messageGetReady.h 
+        );
+    }
+}
+
+const Screens = {
+    INICIO:{
+        draw(){
+            background.draw();
+            floor.draw();
+            flappyBird.draw();
+            messageGetReady.draw();
+        },
+        click(){
+            mudaDeTela(Screens.GAME);
+        },
+        update(){
+
+        }
+    },
+    GAME:{
+        draw(){
+            background.draw();
+            floor.draw();
+            flappyBird.draw();
+        },
+        update(){
+            flappyBird.update();
+        }
+    }
+}
+
+let telaAtiva = {};
+function mudaDeTela(novaTela){
+    telaAtiva = novaTela;
+}
+
 function loop(){
 
-    background.draw();
-    floor.draw();
-    flappyBird.draw();
-    flappyBird.update();
-
-
-
+    telaAtiva.draw();
+    telaAtiva.update();
 
     requestAnimationFrame(loop);
 }
 
+canvas.addEventListener('click', () => {
+    Screens.INICIO.click();
+})
+
+mudaDeTela(Screens.INICIO);
 loop();
